@@ -6,10 +6,10 @@ namespace CustomerAPI.Services
 {
     public interface ICustomerRepository
     {
-        Task<IEnumerable<Customer>> GetCustomersListAsync();
-        Task<Customer> GetCustomerAsync(int id);
-        Task<Customer> CreateCustomerAsync(Customer customer);
+        Task<IEnumerable<CustomerModel>> GetCustomersListAsync();
+        Task<CustomerModel> GetCustomerAsync(int id);
+        Task<CustomerModel> CreateCustomerAsync(CustomerModel customer);
         Task<bool> SaveAll();
-        Task<Customer> DeleteCustomerAsync(int customerId);
+        Task<CustomerModel> DeleteCustomerAsync(int customerId);
     }
 }
