@@ -1,11 +1,9 @@
-﻿using CustomerAPI.Models;
+﻿using System.Collections.Generic;
+using CustomerAPI.Data;
+using CustomerAPI.Models;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace CustomerAPI.Data
+namespace CustomerAPI.Helpers
 {
     public class CustomerSeed
     {
@@ -19,7 +17,7 @@ namespace CustomerAPI.Data
         public void SeedCustomers()
         {
             string customerData = System.IO.File.ReadAllText("Data/CustomerSeedData.json");
-            var customers = JsonConvert.DeserializeObject<List<Customer>>(customerData);
+            var customers = JsonConvert.DeserializeObject<List<CustomerModel>>(customerData);
 
             _customerDbContext.AddRange(customers);
             _customerDbContext.SaveChanges();

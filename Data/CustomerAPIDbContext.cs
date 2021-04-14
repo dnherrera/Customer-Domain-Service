@@ -8,7 +8,7 @@ namespace CustomerAPI.Data
     {
         public CustomerAPIDbContext(DbContextOptions<CustomerAPIDbContext> options) : base(options) { }
 
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Address> Address { get; set; }
+        public DbSet<CustomerModel> Customers { get; set; }
+        public DbSet<AddressModel> Address { get; set; }
     }
 }

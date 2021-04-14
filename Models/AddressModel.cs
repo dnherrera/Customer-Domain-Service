@@ -1,12 +1,12 @@
-﻿namespace CustomerAPI.Dtos
+﻿namespace CustomerAPI.Models
 {
     /// <summary>
-    /// Address DTO
+    /// Address Model
     /// </summary>
-    public class AddressDto
+    public class AddressModel
     {
         /// <summary>
-        /// Gets or sets the Address Identifier
+        /// Gets or sets Address Identifier
         /// </summary>
         public int Id { get; set; }
 
@@ -29,5 +29,15 @@
         /// Gets or sets the State
         /// </summary>
         public string State { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Customer
+        /// </summary>
+        public CustomerModel Customer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Customer Id
+        /// </summary>
+        public int CustomerId { get; set; }
     }
 }

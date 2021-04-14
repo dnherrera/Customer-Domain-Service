@@ -31,15 +31,15 @@ namespace CustomerAPI.Controllers
 
         [HttpGet]
         [SwaggerOperation(Summary = "Get customer list")]
-        [SwaggerResponse(200, "Success", typeof(Customer))]
+        [SwaggerResponse(200, "Success", typeof(CustomerModel))]
         [SwaggerResponse(401, "Unauthorized. Incorrect authentication key")]
-        [ProducesResponseType(typeof(Customer), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CustomerModel), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> GetCustomers()
         {
             try
             {
-                IEnumerable<Customer> customer = await _customerRepository.GetCustomersListAsync();
+                IEnumerable<CustomerModel> customer = await _customerRepository.GetCustomersListAsync();
                 return Ok(customer);
             }
             catch (Exception ex)
@@ -51,7 +51,7 @@ namespace CustomerAPI.Controllers
 
         [HttpGet("{CustomerId}")]
         [SwaggerOperation(Summary = "Get customer by Id")]
-        [SwaggerResponse(200, "Success", typeof(Customer))]
+        [SwaggerResponse(200, "Success", typeof(CustomerModel))]
         [SwaggerResponse(404, "Not Found")]
         [SwaggerResponse(401, "Unauthorized. Incorrect authentication key")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -61,7 +61,7 @@ namespace CustomerAPI.Controllers
         {
             try
             {
-                Customer customer = await _customerRepository.GetCustomerAsync(CustomerId);
+                CustomerModel customer = await _customerRepository.GetCustomerAsync(CustomerId);
                 if (customer == null)
                     return NotFound($"Customer {CustomerId} not found");
 
@@ -76,7 +76,7 @@ namespace CustomerAPI.Controllers
 
         [HttpPost("Customer")]
         [SwaggerOperation(Summary = "Create New Customer Profile")]
-        [SwaggerResponse(201, "Success", typeof(Customer))]
+        [SwaggerResponse(201, "Success", typeof(CustomerModel))]
         [SwaggerResponse(401, "Unauthorized. Incorrect authentication key")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
@@ -84,11 +84,11 @@ namespace CustomerAPI.Controllers
         {
             try
             {
-                Customer customer = null;
+                CustomerModel customer = null;
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                Customer createdCustomer = _mapper.Map(customerdto, customer);
+                CustomerModel createdCustomer = _mapper.Map(customerdto, customer);
                 await _customerRepository.CreateCustomerAsync(createdCustomer);
 
                 return Accepted(createdCustomer);
@@ -102,10 +102,10 @@ namespace CustomerAPI.Controllers
 
         [HttpPut("{CustomerId}")]
         [SwaggerOperation(Summary = "To Update Customer Profile")]
-        [SwaggerResponse(201, "Success", typeof(Customer))]
+        [SwaggerResponse(201, "Success", typeof(CustomerModel))]
         [SwaggerResponse(400, "Bad Request. Please make sure your address Id is correct.")]
         [SwaggerResponse(401, "Unauthorized. Incorrect authentication key.")]
-        [ProducesResponseType(typeof(Customer), (int)HttpStatusCode.Accepted)]
+        [ProducesResponseType(typeof(CustomerModel), (int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> UpdateCustomer([FromRoute] int CustomerId, [FromBody] CustomerDto customerToUpdate)
@@ -115,7 +115,7 @@ namespace CustomerAPI.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                Customer customerFromRepos = await _customerRepository.GetCustomerAsync(CustomerId);
+                CustomerModel customerFromRepos = await _customerRepository.GetCustomerAsync(CustomerId);
 
                 if (customerFromRepos == null)
                     return NotFound($"Could not find user with an ID of {CustomerId}");
@@ -137,7 +137,7 @@ namespace CustomerAPI.Controllers
 
         [HttpDelete("{CustomerId}")]
         [SwaggerOperation(Summary = "To Delete Customer Profile")]
-        [SwaggerResponse(200, "Success", typeof(Customer))]
+        [SwaggerResponse(200, "Success", typeof(CustomerModel))]
         [SwaggerResponse(401, "Unauthorized. Incorrect authentication key.")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]

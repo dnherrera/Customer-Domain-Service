@@ -3,20 +3,17 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using CustomerAPI.Data;
+using CustomerAPI.Helpers;
 using CustomerAPI.Services;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-using System;
-using System.Text;
 
 namespace CustomerAPI
 {
