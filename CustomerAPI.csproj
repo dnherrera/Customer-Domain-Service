@@ -26,5 +26,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
+  </ItemGroup>
+
 
 </Project>

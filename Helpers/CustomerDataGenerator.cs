@@ -12,8 +12,8 @@ namespace CustomerAPI.Helpers
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
-            using (CustomerAPIDbContext context = new CustomerAPIDbContext(
-            serviceProvider.GetRequiredService<DbContextOptions<CustomerAPIDbContext>>()))
+            using (RepositoryDbContext context = new RepositoryDbContext(
+            serviceProvider.GetRequiredService<DbContextOptions<RepositoryDbContext>>()))
             {
                 // Look for any customer list
                 if (context.Customers.Any())

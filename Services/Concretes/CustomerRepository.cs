@@ -1,51 +1,82 @@
 ﻿using CustomerAPI.Data;
 using CustomerAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace CustomerAPI.Services
 {
-    public class CustomerRepository : ICustomerRepository
+    /// <summary>
+    /// Customer Repository
+    /// </summary>
+    /// <seealso cref="CustomerAPI.Data.BaseRepository{CustomerModel}"/>
+    /// <seealso cref="CustomerAPI.Services.ICustomerRepository"/>
+    public class CustomerRepository : BaseRepository<CustomerModel>, ICustomerRepository
     {
-        private readonly CustomerAPIDbContext _customerDbContext;
-
-        public CustomerRepository(CustomerAPIDbContext customerDbContext)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomerRepository"/> class.
+        /// </summary>
+        /// <param name="repositoryDbContext"></param>
+        public CustomerRepository(RepositoryDbContext repositoryDbContext, ILogger<ICustomerRepository> logger) : base(logger, repositoryDbContext)
         {
-            _customerDbContext = customerDbContext;
         }
+
+        /// <summary>
+        /// Create Customer Async
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         public async Task<CustomerModel> CreateCustomerAsync(CustomerModel customer)
         {
-            await _customerDbContext.Customers.AddAsync(customer);
-            await _customerDbContext.SaveChangesAsync();
+            await DbContext.Customers.AddAsync(customer);
+            await DbContext.SaveChangesAsync();
             return customer;
         }
 
-        public async Task<CustomerModel> DeleteCustomerAsync(int customerId)
+        /// <summary>
+        /// Delete Customer Async
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteCustomerByIdentifierAsync(int customerId)
         {
-            CustomerModel customer = await _customerDbContext.Customers.FirstOrDefaultAsync(c => c.Id == customerId);
-             _customerDbContext.Customers.Remove(customer);
-            await _customerDbContext.SaveChangesAsync();
-            return null;
+            var customer = await DbContext.Customers.FirstOrDefaultAsync(c => c.Id == customerId);
+            DbContext.Customers.Remove(customer);
+            await DbContext.SaveChangesAsync();
+            return customerId;
         }
 
-        public async Task<CustomerModel> GetCustomerAsync(int id)
+        /// <summary>
+        /// Get Customer By Id Async
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<CustomerModel> GetCustomerByIdentifierAsync(int id)
         {
-            return await _customerDbContext.Customers
-                                .Include(a => a.Address)
-                                .Where(c => c.Id == id).FirstOrDefaultAsync();
+            return await DbContext.Customers.Include(a => a.Address).Where(c => c.Id == id).FirstOrDefaultAsync();
         }
 
+        /// <summary>
+        /// Get Customer List Collection
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<CustomerModel>> GetCustomersListAsync()
         {
-            return await _customerDbContext.Customers
-                                .Include(a => a.Address).ToListAsync();
+            return await DbContext.Customers.Include(a => a.Address).ToListAsync();
         }
-
-        public async Task<bool> SaveAll()
+        
+        /// <summary>
+        /// Update Customer List Collection
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        public async Task<CustomerModel> UpdateCustomerAsync(CustomerModel customer)
         {
-            return await _customerDbContext.SaveChangesAsync() > 0;
+            DbContext.Customers.Update(customer);
+            await DbContext.SaveChangesAsync();
+            return customer;
         }
     }
 }

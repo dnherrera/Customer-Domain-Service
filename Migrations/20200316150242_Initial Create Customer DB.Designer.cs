@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CustomerAPI.Migrations
 {
-    [DbContext(typeof(CustomerAPIDbContext))]
+    [DbContext(typeof(RepositoryDbContext))]
     [Migration("20200316150242_Initial Create Customer DB")]
     partial class InitialCreateCustomerDB
     {
