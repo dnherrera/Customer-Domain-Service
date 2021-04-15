@@ -4,7 +4,9 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using CustomerAPI.Data;
 using CustomerAPI.Helpers;
+using CustomerAPI.Middlewares;
 using CustomerAPI.Services;
+using CustomerAPI.Settings;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -50,21 +52,23 @@ namespace CustomerAPI
             });
 
             services.AddAutoMapper(c => {c.AddCollectionMappers();});
-            services.AddDbContext<CustomerAPIDbContext>(opt => opt.UseSqlite(Configuration.GetConnectionString("CustomerAPIConnection")));
+            services.AddDbContext<RepositoryDbContext>(opt => opt.UseSqlite(Configuration.GetConnectionString("CustomerAPIConnection")));
+            services.Configure<AuthKeySetting>(Configuration.GetSection(AuthKeySetting.SectionName));
+            services.Configure<AppSetting>(Configuration.GetSection(AppSetting.SectionName));
+
             services.AddMvc().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore); ;
             services.AddTransient<CustomerSeed>();
             services.AddOptions();
 
             // configure basic authentication 
             services.AddAuthentication("BasicAuthentication")
-                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+                .AddScheme<AuthenticationSchemeOptions, AuthenticationHandler>("BasicAuthentication", null);
 
         }
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<CustomerRepository>().As<ICustomerRepository>();
             builder.RegisterType<AuthenticationKeyService>().As<IAuthenticationKeyService>();
-            builder.RegisterType<ErrorLoggingService>().As<IErrorLogging>();
             builder.RegisterType<TimeService>().As<ITimeService>();
         }
 
@@ -88,6 +92,8 @@ namespace CustomerAPI
             app.UseAuthorization();
 
             app.UseSwagger();
+
+            app.UseMiddleware<ExceptionHandleMiddleware>();
 
             app.UseSwaggerUI(c =>
             {

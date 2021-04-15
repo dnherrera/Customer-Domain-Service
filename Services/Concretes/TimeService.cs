@@ -2,22 +2,29 @@
 
 namespace CustomerAPI.Services
 {
+    /// <summary>
+    /// Time Service
+    /// </summary>
+    /// <see cref="CustomerAPI.Services.ITimeService"/>
     public class TimeService : ITimeService
     {
         private DateTime LastDateTime;
         private TimeSpan CurrentTime;
 
-
-        public TimeService()
-        {
-
-        }
+        /// <summary>
+        /// Get Last Date Time Now
+        /// </summary>
+        /// <returns></returns>
         public DateTime GetLastTimeNow()
         {
             LastDateTime = DateTime.Now;
             return LastDateTime;
         }
 
+        /// <summary>
+        /// Get the Current Time 
+        /// </summary>
+        /// <returns></returns>
         public TimeSpan GetCurrentTimeNow()
         {
             CurrentTime = DateTime.Now.TimeOfDay;

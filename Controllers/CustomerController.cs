@@ -1,78 +1,117 @@
-﻿using CustomerAPI.Dtos;
-using CustomerAPI.Models;
-using CustomerAPI.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
-using System;
-using System.Linq;
+using CustomerAPI.Dtos;
+using CustomerAPI.Models;
+using CustomerAPI.Requests;
+using CustomerAPI.Services;
+using CustomerAPI.Settings;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net;
 
 namespace CustomerAPI.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class CustomerController : BaseLogger
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IMapper _mapper;
-        private readonly IErrorLogging _errorLogging;
+        private readonly AppSetting _appSetting;
 
-        public CustomerController(ICustomerRepository customerRepository, IMapper mapper, IErrorLogging errorLogging)
+        public CustomerController(
+            ICustomerRepository customerRepository, 
+            IMapper mapper, 
+            ILogger<CustomerController> logger,
+            IOptions<AppSetting> appSetting) : base(logger)
         {
             _customerRepository = customerRepository;
             _mapper = mapper;
-            _errorLogging = errorLogging;
+            _appSetting = appSetting.Value;
         }
 
+        /// <summary>
+        /// Gets Customer Collection.
+        /// </summary>
+        /// <returns>The list collection of customer collection.</returns>
         [HttpGet]
-        [SwaggerOperation(Summary = "Get customer list")]
-        [SwaggerResponse(200, "Success", typeof(CustomerModel))]
-        [SwaggerResponse(401, "Unauthorized. Incorrect authentication key")]
-        [ProducesResponseType(typeof(CustomerModel), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> GetCustomers()
+        [Consumes("application/json")]
+        [Produces("application/json", Type = typeof(PagingDto<CustomerDto>))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(PagingDto<CustomerDto>))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetailsDto))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetailsDto))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetailsDto))]
+        public async Task<ActionResult> GetCustomerCollection([FromQuery] GetCustomerRequest request)
         {
+            LogStart();
             try
             {
-                IEnumerable<CustomerModel> customer = await _customerRepository.GetCustomersListAsync();
-                return Ok(customer);
+                var errorInfo = new ErrorInfo();
+
+                // Paging
+                errorInfo = PagingValidator.Validate(request.PageIndex, request.PageSize, _appSetting.MaximumPageSize, out int pageIndex, out int pageSize);
+                if (errorInfo.ErrorCode != ErrorTypes.OK)
+                {
+                    throw new BadInputException(errorInfo);
+                }
+
+                // Sort Field
+                errorInfo = SortFieldValidator.Validate<CustomerModel>(request.SortField, out string sortField);
+                if (errorInfo.ErrorCode != ErrorTypes.OK)
+                {
+                    throw new BadInputException(errorInfo);
+                }
+
+                var result = await _customerRepository.GetCustomersListAsync();
+                var count = result.Count();
+
+                var resultDto = new PagingDto<CustomerDto>
+                {
+                    Collection = _mapper.Map<List<CustomerDto>>(result),
+                    PageIndex = pageIndex,
+                    PageSize = pageSize,
+                    TotalRecords = count,
+                    TotalPages = (int)((count - 1) / pageSize + 1)
+                };
+
+                LogEnd();
+                return Ok(resultDto);
             }
             catch (Exception ex)
             {
-                _errorLogging.ErrorLogging(ex);
-                return BadRequest(); ;
+                LogError(ex);
+                throw ex;
             }
         }
 
-        [HttpGet("{CustomerId}")]
-        [SwaggerOperation(Summary = "Get customer by Id")]
-        [SwaggerResponse(200, "Success", typeof(CustomerModel))]
-        [SwaggerResponse(404, "Not Found")]
-        [SwaggerResponse(401, "Unauthorized. Incorrect authentication key")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> GetCustomer(int CustomerId)
+        /// <summary>
+        /// Gets the customer by identifier.
+        /// </summary>
+        /// <param name="id">The Customer Identifier.</param>
+        /// <returns>
+        /// Customer detail by Identifier
+        /// </returns>
+        [HttpGet("{customerId}")]
+        [Consumes("application/json")]
+        [Produces("application/json", Type = typeof(CustomerDto))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(CustomerDto))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetailsDto))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetailsDto))]
+        public async Task<ActionResult> GetCustomerById(int customerId)
         {
-            try
-            {
-                CustomerModel customer = await _customerRepository.GetCustomerAsync(CustomerId);
-                if (customer == null)
-                    return NotFound($"Customer {CustomerId} not found");
-
-                return Ok(customer);
-            }
-            catch (Exception ex)
-            {
-                _errorLogging.ErrorLogging(ex);
-                return BadRequest(); ;
-            }
+            var result = await _customerRepository.GetCustomerByIdentifierAsync(customerId);
+            return Ok(result);
         }
+
 
         [HttpPost("Customer")]
         [SwaggerOperation(Summary = "Create New Customer Profile")]
@@ -93,9 +132,8 @@ namespace CustomerAPI.Controllers
 
                 return Accepted(createdCustomer);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _errorLogging.ErrorLogging(ex);
                 return BadRequest(); ;
             }
         }
@@ -115,7 +153,7 @@ namespace CustomerAPI.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                CustomerModel customerFromRepos = await _customerRepository.GetCustomerAsync(CustomerId);
+                CustomerModel customerFromRepos = await _customerRepository.GetCustomerByIdentifierAsync(CustomerId);
 
                 if (customerFromRepos == null)
                     return NotFound($"Could not find user with an ID of {CustomerId}");
@@ -123,14 +161,13 @@ namespace CustomerAPI.Controllers
 
                 _mapper.Map(customerToUpdate, customerFromRepos);
 
-                if (!await _customerRepository.SaveAll())
-                    throw new Exception($"Updating user {CustomerId} failed on save");
+                //if (!await _customerRepository.SaveAll())
+                //    throw new Exception($"Updating user {CustomerId} failed on save");
 
                 return Accepted(customerFromRepos);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _errorLogging.ErrorLogging(ex);
                 return BadRequest($"Please make sure your address Id - {customerToUpdate.Address.SingleOrDefault().Id} is correct to update the profile.");
             }
         }
@@ -145,12 +182,11 @@ namespace CustomerAPI.Controllers
         {
             try
             {
-                await _customerRepository.DeleteCustomerAsync(CustomerId);
+                await _customerRepository.DeleteCustomerByIdentifierAsync(CustomerId);
                 return StatusCode(200, "Deleted successfully");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _errorLogging.ErrorLogging(ex);
                 return BadRequest(); ;
             }
         }

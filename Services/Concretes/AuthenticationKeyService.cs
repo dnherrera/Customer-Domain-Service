@@ -1,25 +1,40 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CustomerAPI.Settings;
+using Microsoft.Extensions.Options;
 
 namespace CustomerAPI.Services
 {
+    /// <summary>
+    /// Authentication Key Service
+    /// </summary>
     public class AuthenticationKeyService : IAuthenticationKeyService
     {
-        private List<AuthKey> _key = new List<AuthKey>
-        {
-            new AuthKey { AuthenticationKey = "abcd1234" }
-        };
+        private readonly AuthKeySetting _authKeySetting;
 
-        public async Task<AuthKey> AuthenticateAsync(string authKey)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthenticationKeyService"/>
+        /// </summary>
+        /// <param name="configuration"></param>
+        public AuthenticationKeyService(IOptions<AuthKeySetting> authKeySetting)
         {
-            AuthKey key = await Task.Run(() => _key.SingleOrDefault(x => x.AuthenticationKey == authKey));
+            _authKeySetting = authKeySetting.Value;
+        }
 
-            if (key == null)
+        /// <summary>
+        /// Authenticate Key
+        /// </summary>
+        /// <param name="authKey">The auth key.</param>
+        /// <returns></returns>
+        public async Task<string> AuthenticateKeyAsync(string authKey)
+        {
+            var isValidKey = await Task.Run(() => _authKeySetting.AuthenticationKey == authKey);
+            
+            if (!isValidKey)
+            {
                 return null;
+            }
 
-            return key;
+            return _authKeySetting.AuthenticationKey;
         }
     }
 }

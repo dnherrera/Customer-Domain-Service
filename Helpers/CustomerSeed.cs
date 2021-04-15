@@ -7,9 +7,9 @@ namespace CustomerAPI.Helpers
 {
     public class CustomerSeed
     {
-        private readonly CustomerAPIDbContext _customerDbContext;
+        private readonly RepositoryDbContext _customerDbContext;
 
-        public CustomerSeed(CustomerAPIDbContext customerDbContext)
+        public CustomerSeed(RepositoryDbContext customerDbContext)
         {
             _customerDbContext = customerDbContext;
         }
