@@ -56,6 +56,11 @@
         /// </summary>
         InvalidPassword = 102,
 
+        /// <summary>
+        /// The id is invalid
+        /// </summary>
+        InvalidIdentifier = 103,
+
 
         #endregion
     }
