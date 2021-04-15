@@ -108,8 +108,37 @@ namespace CustomerAPI.Controllers
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetailsDto))]
         public async Task<ActionResult> GetCustomerById(int customerId)
         {
-            var result = await _customerRepository.GetCustomerByIdentifierAsync(customerId);
-            return Ok(result);
+            LogStart();
+            try
+            {
+                var errorInfo = new ErrorInfo();
+
+                // Customer Id
+                errorInfo = IdentifierValidator.Validate(customerId);
+                if (errorInfo.ErrorCode != ErrorTypes.OK)
+                {
+                    throw new BadInputException(errorInfo);
+                }
+
+                var customerModel = await _customerRepository.GetCustomerByIdentifierAsync(customerId);
+
+                // Customer
+                errorInfo = CustomerObjectValidator.Validate(customerModel, customerId);
+                if (errorInfo.ErrorCode != ErrorTypes.OK)
+                {
+                    throw new NotFoundException(errorInfo);
+                }
+
+                // Map
+                var result = _mapper.Map<CustomerDto>(customerModel);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+                throw ex;
+            }
         }
 
 
