@@ -141,30 +141,49 @@ namespace CustomerAPI.Controllers
             }
         }
 
-
-        [HttpPost("Customer")]
-        [SwaggerOperation(Summary = "Create New Customer Profile")]
-        [SwaggerResponse(201, "Success", typeof(CustomerModel))]
-        [SwaggerResponse(401, "Unauthorized. Incorrect authentication key")]
-        [ProducesResponseType((int)HttpStatusCode.Accepted)]
-        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> SaveCustomer([FromBody] CustomerDto customerdto)
+        [HttpPost]
+        [Consumes("application/json")]
+        [Produces("application/json", Type = typeof(CustomerDto))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetailsDto))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetailsDto))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetailsDto))]
+        public async Task<IActionResult> SaveCustomer([FromBody] CreateCustomerRequest requestDto)
         {
-            try
-            {
-                CustomerModel customer = null;
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+            var errorInfo = new ErrorInfo();
 
-                CustomerModel createdCustomer = _mapper.Map(customerdto, customer);
-                await _customerRepository.CreateCustomerAsync(createdCustomer);
-
-                return Accepted(createdCustomer);
-            }
-            catch (Exception)
+            // Validate Fullname
+            errorInfo = FullNameValidator.Validate(requestDto.FullName, out string fullName);
+            if (errorInfo.ErrorCode != ErrorTypes.OK)
             {
-                return BadRequest(); ;
+                throw new BadInputException(errorInfo);
             }
+
+            // Validate Date of Birth
+            errorInfo = DateTimeValidator.Validate(requestDto.DateOfBirth);
+            if (errorInfo.ErrorCode != ErrorTypes.OK)
+            {
+                throw new BadInputException(errorInfo);
+            }
+
+            // Validate ICollection Address
+            foreach (var item in requestDto.Address)
+            {
+                errorInfo = AddressValidator.Validate(item);
+                if (errorInfo.ErrorCode != ErrorTypes.OK)
+                {
+                    throw new BadInputException(errorInfo);
+                }
+            }
+
+            // Map request into model
+            var customerModel = _mapper.Map<CustomerModel>(requestDto);
+
+            customerModel.FullName = fullName;
+                
+            await _customerRepository.CreateCustomerAsync(customerModel);
+
+            return Ok(customerModel);
         }
 
         [HttpPut("{CustomerId}")]

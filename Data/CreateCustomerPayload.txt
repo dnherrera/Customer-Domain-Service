@@ -1,0 +1,42 @@
+﻿{
+  "fullName": "タロウ",
+  "dateOfBirth": "1995-04-15",
+  "address": [
+    {
+      "addressLine1": "201",
+      "city": "Imus",
+      "state": "Cavite"
+    },
+    {
+      "addressLine1": "200",
+      "city": "Bayan Luma",
+      "state": "Cavite"
+    }
+  ]
+}
+
+
+Test Case for Fullname
+var names = new string[]
+{
+  "Hello World", 
+  "John",
+  "João",
+  "タロウ",
+  "やまだ",
+  "山田",
+  "先生",
+  "мыхаыл",
+  "Θεοκλεια",
+  "आकाङ्क्षा",
+  "علاء الدين",
+  "אַבְרָהָם",
+  "മലയാളം",
+  "상",
+  "D'Addario",
+  "John-Doe",
+  "P.A.M.",
+  "' --",
+  "<xss>",
+  "\""
+};
