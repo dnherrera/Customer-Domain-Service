@@ -2,6 +2,7 @@
 using AutoMapper.EquivalencyExpression;
 using CustomerAPI.Dtos;
 using CustomerAPI.Models;
+using CustomerAPI.Requests;
 
 namespace CustomerAPI.Helpers
 {
@@ -25,7 +26,16 @@ namespace CustomerAPI.Helpers
             // Mapping Address Model to Address DTO 
             CreateMap<AddressModel, AddressDto>()
                 .ReverseMap()
-                .EqualityComparison((sir, si) => sir.Id == si.Id);
+                .EqualityComparison((adto, adm) => adto.Id == adm.Id);
+
+            // Mapping Create Customer Request to Customer Model 
+            CreateMap<CreateCustomerRequest, CustomerModel>()
+                .ForMember(cm => cm.Id, ccr => ccr.Ignore())
+                 .ForMember(cm => cm.DateOfBirth, ccr => ccr.MapFrom(d => d.DateOfBirth.Value.Date))
+                .ForMember(cm => cm.Age, ccr => ccr.MapFrom(d => CalculateAge.Calculate(d.DateOfBirth)));
+
+            CreateMap<CreateAddressRequest, AddressModel>()
+                .ForMember(am => am.Id, car => car.Ignore());
         }
     }
 }

@@ -23,9 +23,9 @@
         InvalidSortField = 2,
 
         /// <summary>
-        /// The invalid date time duration
+        /// The invalid date time
         /// </summary>
-        InvalidDateTimeDuration = 3,
+        InvalidDate = 3,
 
         /// <summary>
         /// The invalid enum name
@@ -47,9 +47,9 @@
         CustomerNotFound = 100,
 
         /// <summary>
-        /// The username is invalid
+        /// The fullname is invalid
         /// </summary>
-        InvalidUsername = 101,
+        InvalidFullName = 101,
 
         /// <summary>
         /// The password is invalid

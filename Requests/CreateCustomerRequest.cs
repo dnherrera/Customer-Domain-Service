@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
-namespace CustomerAPI.Dtos
+namespace CustomerAPI.Requests
 {
     /// <summary>
-    /// Customer DTO
+    /// Create Customer Request
     /// </summary>
-    public class CustomerDto
+    public class CreateCustomerRequest
     {
         /// <summary>
         /// Gets or sets the Fullname
@@ -20,13 +19,8 @@ namespace CustomerAPI.Dtos
         public DateTime? DateOfBirth { get; set; }
 
         /// <summary>
-        /// Gets or set the Age
-        /// </summary>
-        public int Age { get; set; }
-
-        /// <summary>
         /// Gets or sets the Address
         /// </summary>
-        public ICollection<AddressDto> Address { get; set; }
+        public ICollection<CreateAddressRequest> Address { get; set; }
     }
 }
