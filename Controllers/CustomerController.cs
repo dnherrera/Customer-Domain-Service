@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using CustomerAPI.Dtos;
+using CustomerAPI.Helpers;
 using CustomerAPI.Models;
 using CustomerAPI.Requests;
 using CustomerAPI.Services;
@@ -28,8 +29,8 @@ namespace CustomerAPI.Controllers
         private readonly AppSetting _appSetting;
 
         public CustomerController(
-            ICustomerRepository customerRepository, 
-            IMapper mapper, 
+            ICustomerRepository customerRepository,
+            IMapper mapper,
             ILogger<CustomerController> logger,
             IOptions<AppSetting> appSetting) : base(logger)
         {
@@ -148,26 +149,26 @@ namespace CustomerAPI.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetailsDto))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetailsDto))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetailsDto))]
-        public async Task<IActionResult> SaveCustomer([FromBody] CreateCustomerRequest requestDto)
+        public async Task<IActionResult> SaveCustomer([FromBody] CreateCustomerRequest request)
         {
             var errorInfo = new ErrorInfo();
 
             // Validate Fullname
-            errorInfo = FullNameValidator.Validate(requestDto.FullName, out string fullName);
+            errorInfo = FullNameValidator.Validate(request.FullName, out string fullName);
             if (errorInfo.ErrorCode != ErrorTypes.OK)
             {
                 throw new BadInputException(errorInfo);
             }
 
             // Validate Date of Birth
-            errorInfo = DateTimeValidator.Validate(requestDto.DateOfBirth);
+            errorInfo = DateTimeValidator.Validate(request.DateOfBirth);
             if (errorInfo.ErrorCode != ErrorTypes.OK)
             {
                 throw new BadInputException(errorInfo);
             }
 
             // Validate ICollection Address
-            foreach (var item in requestDto.Address)
+            foreach (var item in request.Address)
             {
                 errorInfo = AddressValidator.Validate(item);
                 if (errorInfo.ErrorCode != ErrorTypes.OK)
@@ -177,66 +178,124 @@ namespace CustomerAPI.Controllers
             }
 
             // Map request into model
-            var customerModel = _mapper.Map<CustomerModel>(requestDto);
+            var customerModel = _mapper.Map<CustomerModel>(request);
 
             customerModel.FullName = fullName;
-                
+
             await _customerRepository.CreateCustomerAsync(customerModel);
 
             return Ok(customerModel);
         }
 
-        [HttpPut("{CustomerId}")]
-        [SwaggerOperation(Summary = "To Update Customer Profile")]
-        [SwaggerResponse(201, "Success", typeof(CustomerModel))]
-        [SwaggerResponse(400, "Bad Request. Please make sure your address Id is correct.")]
-        [SwaggerResponse(401, "Unauthorized. Incorrect authentication key.")]
-        [ProducesResponseType(typeof(CustomerModel), (int)HttpStatusCode.Accepted)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<IActionResult> UpdateCustomer([FromRoute] int CustomerId, [FromBody] CustomerDto customerToUpdate)
+        [HttpPut("{id}")]
+        [Consumes("application/json")]
+        [Produces("application/json", Type = typeof(CustomerDto))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetailsDto))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetailsDto))]
+        public async Task<IActionResult> UpdateCustomer(int id, UpdateCustomerRequest request)
         {
-            try
+            var errorInfo = new ErrorInfo();
+
+            // Verify customer identifier from route and request body
+            errorInfo = IdentifierValidator.Validate(id, request.CustomerIdentifier);
+            if (errorInfo.ErrorCode != ErrorTypes.OK)
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
-                CustomerModel customerFromRepos = await _customerRepository.GetCustomerByIdentifierAsync(CustomerId);
-
-                if (customerFromRepos == null)
-                    return NotFound($"Could not find user with an ID of {CustomerId}");
-
-
-                _mapper.Map(customerToUpdate, customerFromRepos);
-
-                //if (!await _customerRepository.SaveAll())
-                //    throw new Exception($"Updating user {CustomerId} failed on save");
-
-                return Accepted(customerFromRepos);
+                throw new BadInputException(errorInfo);
             }
-            catch (Exception)
+
+            // Find customer to update
+            var currentCustomer = await _customerRepository.GetCustomerByIdentifierAsync(id);
+
+            // Customer
+            errorInfo = CustomerObjectValidator.Validate(currentCustomer, id);
+            if (errorInfo.ErrorCode != ErrorTypes.OK)
             {
-                return BadRequest($"Please make sure your address Id - {customerToUpdate.Address.SingleOrDefault().Id} is correct to update the profile.");
+                throw new BadInputException(errorInfo);
             }
+
+            bool isModified = false;
+
+            // Fullname
+            if (request.FullName != null && currentCustomer.FullName != request.FullName)
+            {
+                errorInfo = FullNameValidator.Validate(request.FullName, out string fullName);
+                if (errorInfo.ErrorCode != ErrorTypes.OK)
+                {
+                    throw new BadInputException(errorInfo);
+                }
+
+                isModified = true;
+                currentCustomer.FullName = fullName;
+            }
+
+            // Date of Birth
+            if (request.DateOfBirth != null && currentCustomer.DateOfBirth != request.DateOfBirth)
+            {
+                errorInfo = DateTimeValidator.Validate(request.DateOfBirth);
+                if (errorInfo.ErrorCode != ErrorTypes.OK)
+                {
+                    throw new BadInputException(errorInfo);
+                }
+
+                isModified = true;
+                currentCustomer.DateOfBirth = request.DateOfBirth;
+                currentCustomer.Age = CalculateAge.Calculate(request.DateOfBirth);
+            }
+
+            // Validate ICollection Address
+            if (request?.Address != null)
+            {
+                foreach (var item in request.Address)
+                {
+                    errorInfo = AddressValidator.Validate(item);
+                    if (errorInfo.ErrorCode != ErrorTypes.OK)
+                    {
+                        throw new BadInputException(errorInfo);
+                    }
+                }
+
+                isModified = true;
+                currentCustomer.Address = _mapper.Map<List<AddressModel>>(request.Address);
+            }
+
+            if (isModified)
+            {
+                // TODO: To implement the updated and created date in Model
+                // newCustomer.UpdatedDate = DateTime.UtcNow;
+                await _customerRepository.UpdateCustomerAsync(currentCustomer);
+            }
+
+            // Map Journal Model to Journal Dto
+            var resultDto = _mapper.Map<CustomerDto>(currentCustomer);
+
+            return Ok(resultDto);
         }
 
-        [HttpDelete("{CustomerId}")]
-        [SwaggerOperation(Summary = "To Delete Customer Profile")]
-        [SwaggerResponse(200, "Success", typeof(CustomerModel))]
-        [SwaggerResponse(401, "Unauthorized. Incorrect authentication key.")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> DeleteCustomer([FromRoute] int CustomerId)
+
+        [HttpDelete("{id}")]
+        [Consumes("application/json")]
+        [Produces("application/json", Type = typeof(CustomerDto))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(int))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetailsDto))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetailsDto))]
+        public async Task<IActionResult> DeleteCustomer([FromRoute] int id)
         {
-            try
+            var errorInfo = new ErrorInfo();
+
+            // Find customer to delete
+            var customerToDelete = await _customerRepository.GetCustomerByIdentifierAsync(id);
+
+            // Customer
+            errorInfo = CustomerObjectValidator.Validate(customerToDelete, id);
+            if (errorInfo.ErrorCode != ErrorTypes.OK)
             {
-                await _customerRepository.DeleteCustomerByIdentifierAsync(CustomerId);
-                return StatusCode(200, "Deleted successfully");
+                throw new BadInputException(errorInfo);
             }
-            catch (Exception)
-            {
-                return BadRequest(); ;
-            }
+
+            var deletedId = await _customerRepository.DeleteCustomerByIdentifierAsync(id);
+            
+            return Ok(new { customerId = deletedId });
         }
     }
 }
