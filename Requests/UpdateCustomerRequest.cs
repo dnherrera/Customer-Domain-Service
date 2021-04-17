@@ -4,10 +4,18 @@ using System.Collections.Generic;
 namespace CustomerAPI.Requests
 {
     /// <summary>
-    /// Create Customer Request
+    /// Update Customer Request
     /// </summary>
-    public class CreateCustomerRequest
+    public class UpdateCustomerRequest
     {
+        /// <summary>
+        /// Gets or sets the journal identifier.
+        /// </summary>
+        /// <value>
+        /// The journal identifier.
+        /// </value>
+        public int CustomerIdentifier { get; set; }
+
         /// <summary>
         /// Gets or sets the Fullname
         /// </summary>

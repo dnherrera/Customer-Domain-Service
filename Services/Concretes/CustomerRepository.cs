@@ -74,7 +74,7 @@ namespace CustomerAPI.Services
         /// <returns></returns>
         public async Task<CustomerModel> UpdateCustomerAsync(CustomerModel customer)
         {
-            DbContext.Customers.Update(customer);
+            DbContext.Update(customer);
             await DbContext.SaveChangesAsync();
             return customer;
         }

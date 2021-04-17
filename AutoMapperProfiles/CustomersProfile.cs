@@ -21,7 +21,8 @@ namespace CustomerAPI.Helpers
             // Mapping Customer Model to Customer DTO 
             CreateMap<CustomerModel, CustomerDto>()
                 .ReverseMap()
-                .ForMember(m => m.Id, opt => opt.Ignore());
+                .ForMember(m => m.Id, opt => opt.Ignore())
+                .ForMember(cm => cm.Age, ccr => ccr.MapFrom(d => CalculateAge.Calculate(d.DateOfBirth)));
 
             // Mapping Address Model to Address DTO 
             CreateMap<AddressModel, AddressDto>()
@@ -31,11 +32,13 @@ namespace CustomerAPI.Helpers
             // Mapping Create Customer Request to Customer Model 
             CreateMap<CreateCustomerRequest, CustomerModel>()
                 .ForMember(cm => cm.Id, ccr => ccr.Ignore())
-                 .ForMember(cm => cm.DateOfBirth, ccr => ccr.MapFrom(d => d.DateOfBirth.Value.Date))
                 .ForMember(cm => cm.Age, ccr => ccr.MapFrom(d => CalculateAge.Calculate(d.DateOfBirth)));
 
-            CreateMap<CreateAddressRequest, AddressModel>()
-                .ForMember(am => am.Id, car => car.Ignore());
+            // Mapping Address Request to Address Model
+            CreateMap<AddressRequest, AddressModel>()
+                .ForMember(am => am.Id, car => car.Ignore())
+                .ForMember(am => am.Customer, car => car.Ignore())
+                 .ForMember(am => am.CustomerId, car => car.Ignore());
         }
     }
 }

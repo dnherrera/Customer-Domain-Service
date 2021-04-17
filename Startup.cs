@@ -31,8 +31,8 @@ namespace CustomerAPI
             this.Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; private set; }
-        public ILifetimeScope AutofacContainer { get; private set; }
+        public IConfiguration Configuration { get; private set; }
+        //public ILifetimeScope AutofacContainer { get; private set; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -58,6 +58,9 @@ namespace CustomerAPI
 
             services.AddMvc().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore); ;
             services.AddTransient<CustomerSeed>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddSingleton<IAuthenticationKeyService, AuthenticationKeyService>();
+            services.AddSingleton<ITimeService, TimeService>();
             services.AddOptions();
 
             // configure basic authentication 
@@ -65,12 +68,12 @@ namespace CustomerAPI
                 .AddScheme<AuthenticationSchemeOptions, AuthenticationHandler>("BasicAuthentication", null);
 
         }
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-            builder.RegisterType<CustomerRepository>().As<ICustomerRepository>();
-            builder.RegisterType<AuthenticationKeyService>().As<IAuthenticationKeyService>();
-            builder.RegisterType<TimeService>().As<ITimeService>();
-        }
+        //public void ConfigureContainer(ContainerBuilder builder)
+        //{
+        //    //builder.RegisterType<CustomerRepository>().As<ICustomerRepository>();
+        //    builder.RegisterType<AuthenticationKeyService>().As<IAuthenticationKeyService>();
+        //    builder.RegisterType<TimeService>().As<ITimeService>();
+        //}
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, CustomerSeed customerSeed)
         {
@@ -79,7 +82,7 @@ namespace CustomerAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+            //this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
             //customerSeed.SeedCustomers();
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace CustomerAPI.Dtos
 {
@@ -9,6 +8,11 @@ namespace CustomerAPI.Dtos
     /// </summary>
     public class CustomerDto
     {
+        /// <summary>
+        /// Gets or sets the Id
+        /// </summary>
+        public string Id { get; set; }
+
         /// <summary>
         /// Gets or sets the Fullname
         /// </summary>

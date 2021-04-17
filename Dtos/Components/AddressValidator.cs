@@ -13,7 +13,7 @@ namespace CustomerAPI.Dtos
         /// <param name="username">The username.</param>
         /// <param name="validValue">The valid value.</param>
         /// <returns>The <see cref="ErrorInfo"/>.</returns>
-        public static ErrorInfo Validate(CreateAddressRequest addressRequest)
+        public static ErrorInfo Validate(AddressRequest addressRequest)
         {
             var e = new ErrorInfo();
 
