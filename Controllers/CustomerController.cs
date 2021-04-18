@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using CustomerAPI.Dtos;
@@ -19,6 +18,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace CustomerAPI.Controllers
 {
+    /// <summary>
+    /// Customer Controller
+    /// </summary>
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -28,6 +30,13 @@ namespace CustomerAPI.Controllers
         private readonly IMapper _mapper;
         private readonly AppSetting _appSetting;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomerController"/> class.
+        /// </summary>
+        /// <param name="customerRepository"></param>
+        /// <param name="mapper"></param>
+        /// <param name="logger"></param>
+        /// <param name="appSetting"></param>
         public CustomerController(
             ICustomerRepository customerRepository,
             IMapper mapper,
@@ -42,7 +51,9 @@ namespace CustomerAPI.Controllers
         /// <summary>
         /// Gets Customer Collection.
         /// </summary>
-        /// <returns>The list collection of customer collection.</returns>
+        /// <returns>
+        /// The list collection of customer collection.
+        /// </returns>
         [HttpGet]
         [Consumes("application/json")]
         [Produces("application/json", Type = typeof(PagingDto<CustomerDto>))]
@@ -142,6 +153,13 @@ namespace CustomerAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Add Customer Details.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>
+        /// New Customer DTO
+        /// </returns>
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json", Type = typeof(CustomerDto))]
@@ -187,6 +205,14 @@ namespace CustomerAPI.Controllers
             return Ok(customerModel);
         }
 
+        /// <summary>
+        /// Update the Customer Details.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns>
+        /// Updated Customer DTO
+        /// </returns>
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [Produces("application/json", Type = typeof(CustomerDto))]
@@ -272,10 +298,16 @@ namespace CustomerAPI.Controllers
             return Ok(resultDto);
         }
 
-
+        /// <summary>
+        /// Delete Customer Details
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>
+        /// Deleted Customer Id
+        /// </returns>
         [HttpDelete("{id}")]
         [Consumes("application/json")]
-        [Produces("application/json", Type = typeof(CustomerDto))]
+        [Produces("application/json", Type = typeof(int))]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(int))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetailsDto))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetailsDto))]
@@ -293,6 +325,7 @@ namespace CustomerAPI.Controllers
                 throw new BadInputException(errorInfo);
             }
 
+            // Delete the Customer By Id
             var deletedId = await _customerRepository.DeleteCustomerByIdentifierAsync(id);
             
             return Ok(new { customerId = deletedId });
