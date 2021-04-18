@@ -1,33 +1,32 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac.Extensions.DependencyInjection;
-using CustomerAPI.Data;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace CustomerAPI
 {
+    /// <summary>
+    /// The program.
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// The main method.
+        /// </summary>
+        /// <param name="args">The array of string.</param>
         public static void Main(string[] args)
         {
-            IHost host = Host.CreateDefaultBuilder(args)
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureWebHostDefaults(webHostBuilder => {
-                    webHostBuilder
-              .UseContentRoot(Directory.GetCurrentDirectory())
-              .UseIISIntegration()
-              .UseStartup<Startup>();
-                })
-                .Build();
-
-            host.Run();
+            CreateHostBuilder(args).Build().Run();
         }
+
+        /// <summary>
+        /// Creates a host builder.
+        /// </summary>
+        /// <param name="args">The array of string.</param>
+        /// <returns>The host builder object.</returns>
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }
