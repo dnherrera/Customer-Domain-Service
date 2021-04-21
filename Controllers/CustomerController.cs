@@ -107,7 +107,7 @@ namespace CustomerAPI.Controllers
         /// <summary>
         /// Gets the customer by identifier.
         /// </summary>
-        /// <param name="id">The Customer Identifier.</param>
+        /// <param name="customerId"></param>
         /// <returns>
         /// Customer detail by Identifier
         /// </returns>
@@ -179,9 +179,18 @@ namespace CustomerAPI.Controllers
             }
 
             // Validate Date of Birth
-            errorInfo = DateTimeValidator.Validate(request.DateOfBirth);
+            errorInfo = DateTimeValidator.Validate(request.DateOfBirth, out DateTime? validDate);
             if (errorInfo.ErrorCode != ErrorTypes.OK)
             {
+                throw new BadInputException(errorInfo);
+            }
+
+            // Check if user already exists
+            var user = await _customerRepository.GetCustomerByFullNameAsync(fullName, validDate);
+            if (user?.Id != null)
+            {
+                errorInfo.ErrorCode = ErrorTypes.InvalidFullName;
+                errorInfo.ErrorMessage = $"This name '{fullName}' is already exists.";
                 throw new BadInputException(errorInfo);
             }
 
@@ -197,7 +206,7 @@ namespace CustomerAPI.Controllers
 
             // Map request into model
             var customerModel = _mapper.Map<CustomerModel>(request);
-
+            customerModel.DateOfBirth = validDate;
             customerModel.FullName = fullName;
 
             await _customerRepository.CreateCustomerAsync(customerModel);
@@ -256,16 +265,16 @@ namespace CustomerAPI.Controllers
             }
 
             // Date of Birth
-            if (request.DateOfBirth != null && currentCustomer.DateOfBirth != request.DateOfBirth)
+            if (request.DateOfBirth != null && currentCustomer.DateOfBirth.ToString() != request.DateOfBirth)
             {
-                errorInfo = DateTimeValidator.Validate(request.DateOfBirth);
+                errorInfo = DateTimeValidator.Validate(request.DateOfBirth, out DateTime? validDate);
                 if (errorInfo.ErrorCode != ErrorTypes.OK)
                 {
                     throw new BadInputException(errorInfo);
                 }
 
                 isModified = true;
-                currentCustomer.DateOfBirth = request.DateOfBirth;
+                currentCustomer.DateOfBirth = validDate;
                 currentCustomer.Age = CalculateAge.Calculate(request.DateOfBirth);
             }
 

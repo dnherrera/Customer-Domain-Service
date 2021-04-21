@@ -8,8 +8,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CustomerAPI.Helpers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CustomerDataGenerator
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceProvider"></param>
         public static void Initialize(IServiceProvider serviceProvider)
         {
             using (RepositoryDbContext context = new RepositoryDbContext(

@@ -34,7 +34,7 @@ namespace CustomerAPI.Services
         /// Updates the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        /// <returns cref="TEntity">The TEntity.</returns>
+        /// <returns>The TEntity.</returns>
         TEntity Update(TEntity entity);
 
         /// <summary>

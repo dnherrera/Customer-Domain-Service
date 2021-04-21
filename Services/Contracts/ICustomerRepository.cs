@@ -1,4 +1,5 @@
 ﻿using CustomerAPI.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,6 +22,14 @@ namespace CustomerAPI.Services
         /// <param name="id"></param>
         /// <returns></returns>
         Task<CustomerModel> GetCustomerByIdentifierAsync(int id);
+
+        /// <summary>
+        /// Get Customer by Username Async
+        /// </summary>
+        /// <param name="fullName"></param>
+        /// <param name="dateOfBirth"></param>
+        /// <returns></returns>
+        Task<CustomerModel> GetCustomerByFullNameAsync(string fullName, DateTime? dateOfBirth);
 
         /// <summary>
         /// Create Customer Async

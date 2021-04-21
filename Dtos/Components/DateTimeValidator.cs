@@ -10,14 +10,48 @@ namespace CustomerAPI.Dtos
         /// <summary>
         /// Validates the specified start date and end date.
         /// </summary>
-        /// <param name="dateRequest">The date request.</param>
+        /// <param name="dateString">The date string.</param>
+        /// <param name="validDate"></param>
         /// <returns>
         /// Error info <see cref="ErrorInfo" />.
         /// </returns>
-        public static ErrorInfo Validate(DateTime? dateRequest)
+        public static ErrorInfo Validate(string dateString, out DateTime? validDate)
+        {
+            var errorInfo = new ErrorInfo();
+            validDate = null;
+
+            DateTime newStartDate;
+
+            if (string.IsNullOrWhiteSpace(dateString))
+            {
+                errorInfo.ErrorCode = ErrorTypes.InvalidDate;
+                errorInfo.ErrorMessage = "Date cannot be empty.";
+                return errorInfo;
+            }
+            else if (!DateTime.TryParse(dateString, out newStartDate))
+            {
+                errorInfo.ErrorCode = ErrorTypes.InvalidDate;
+                errorInfo.ErrorMessage = $"Date '{dateString}' is not valid.";
+                return errorInfo;
+            }
+
+            return Validate(newStartDate, out validDate);
+        }
+
+
+        /// <summary>
+        /// Validates the specified start date and end date.
+        /// </summary>
+        /// <param name="dateRequest">The date request.</param>
+        /// <param name="validDate"></param>
+        /// <returns>
+        /// Error info <see cref="ErrorInfo" />.
+        /// </returns>
+        public static ErrorInfo Validate(DateTime? dateRequest, out DateTime? validDate)
         {
             var errorInfo = new ErrorInfo();
             var currentYear = DateTime.Now.Year;
+            validDate = null;
 
             // Make sure duration request must have start date and end date
             if (!dateRequest.HasValue)
@@ -47,6 +81,8 @@ namespace CustomerAPI.Dtos
                 errorInfo.ErrorMessage = $"Day cannot be more than 31 or less than 1.";
                 return errorInfo;
             }
+
+            validDate = dateRequest.Value;
 
             return errorInfo;
         }

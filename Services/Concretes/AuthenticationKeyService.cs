@@ -14,7 +14,7 @@ namespace CustomerAPI.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthenticationKeyService"/>
         /// </summary>
-        /// <param name="configuration"></param>
+        /// <param name="authKeySetting"></param>
         public AuthenticationKeyService(IOptions<AuthKeySetting> authKeySetting)
         {
             _authKeySetting = authKeySetting.Value;

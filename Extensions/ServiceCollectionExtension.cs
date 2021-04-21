@@ -36,6 +36,17 @@ namespace CustomerAPI.Extensions
         }
 
         /// <summary>
+        /// Add Controller with Views to support Auto Profile while Displaying after Creating User.
+        /// </summary>
+        /// <param name="services"></param>
+        public static void AddControllersWithView(this IServiceCollection services)
+        {
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+        }
+
+        /// <summary>
         /// Adds the repositories.
         /// </summary>
         /// <param name="services">The services.</param>

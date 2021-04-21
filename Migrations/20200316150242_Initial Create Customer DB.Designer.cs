@@ -12,6 +12,10 @@ namespace CustomerAPI.Migrations
     [Migration("20200316150242_Initial Create Customer DB")]
     partial class InitialCreateCustomerDB
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
