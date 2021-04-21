@@ -5,15 +5,25 @@ using Newtonsoft.Json;
 
 namespace CustomerAPI.Helpers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CustomerSeed
     {
         private readonly RepositoryDbContext _customerDbContext;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="customerDbContext"></param>
         public CustomerSeed(RepositoryDbContext customerDbContext)
         {
             _customerDbContext = customerDbContext;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void SeedCustomers()
         {
             string customerData = System.IO.File.ReadAllText("Data/CustomerSeedData.json");

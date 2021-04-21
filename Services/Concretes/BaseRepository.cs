@@ -11,8 +11,8 @@ namespace CustomerAPI.Services
     /// Base repository
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    /// <seealso cref="Kob.Uco.Domains.Balances.Repositories.BaseLogger" />
-    /// <seealso cref="Kob.Uco.Domains.Balances.Interfaces.Repositories.IRepository{TEntity}" />
+    /// <seealso cref="CustomerAPI.Services.BaseLogger" />
+    /// <seealso cref="CustomerAPI.Services.IRepository{TEntity}" />
     public abstract class BaseRepository<TEntity> : BaseLogger, IRepository<TEntity> where TEntity : class
     {
         /// <summary>
@@ -34,7 +34,7 @@ namespace CustomerAPI.Services
         /// Creates the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        /// <returns cref="TEntity">Generic TEntity</returns>
+        /// <returns>Generic TEntity</returns>
         public TEntity Create(TEntity entity)
         {
             DbContext.Set<TEntity>().Add(entity);
@@ -54,7 +54,7 @@ namespace CustomerAPI.Services
         /// Finds the by condition.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <returns cref="TEntity">The entity.</returns>
+        /// <returns>The entity.</returns>
         public IQueryable<TEntity> FindByCondition(Expression<Func<TEntity, bool>> predicate)
         {
             return DbContext.Set<TEntity>().Where(predicate).AsNoTracking();
@@ -63,7 +63,7 @@ namespace CustomerAPI.Services
         /// <summary>
         /// Finds all.
         /// </summary>
-        /// <returns cref="TEntity">The entity.</returns>
+        /// <returns>The entity.</returns>
         public IQueryable<TEntity> FindAll()
         {
             return DbContext.Set<TEntity>().AsNoTracking();
@@ -73,7 +73,7 @@ namespace CustomerAPI.Services
         /// Updates the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        /// <returns cref="TEntity">Generic TEntity</returns>
+        /// <returns>Generic TEntity</returns>
         public TEntity Update(TEntity entity)
         {
             return DbContext.Set<TEntity>().Update(entity).Entity;

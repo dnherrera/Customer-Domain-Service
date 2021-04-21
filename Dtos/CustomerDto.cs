@@ -21,7 +21,7 @@ namespace CustomerAPI.Dtos
         /// <summary>
         /// Gets or sets the Date of Birth
         /// </summary>
-        public DateTime? DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
 
         /// <summary>
         /// Gets or set the Age

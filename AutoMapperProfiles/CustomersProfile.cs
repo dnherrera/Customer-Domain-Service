@@ -10,7 +10,6 @@ namespace CustomerAPI.Helpers
     /// The Customers Profile
     /// </summary>
     /// <seealso cref="AutoMapper.Profile"/>
-    /// <seealso cref="https://dotnettutorials.net/lesson/reverse-mapping-using-automapper/"/>
     public class CustomersProfile : Profile
     {
         /// <summary>

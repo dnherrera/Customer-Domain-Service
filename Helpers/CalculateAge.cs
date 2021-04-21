@@ -1,4 +1,5 @@
 ﻿using System;
+using CustomerAPI.Dtos;
 
 namespace CustomerAPI.Helpers
 {
@@ -12,11 +13,19 @@ namespace CustomerAPI.Helpers
         /// </summary>
         /// <param name="theDateTime"></param>
         /// <returns></returns>
-        public static int Calculate(DateTime? theDateTime)
+        public static int Calculate(string theDateTime)
         {
-            int age = DateTime.Today.Year - theDateTime.Value.Year;
+            var errorInfo = new ErrorInfo();
+            // Validate Date of Birth
+            errorInfo = DateTimeValidator.Validate(theDateTime, out DateTime? validDate);
+            if (errorInfo.ErrorCode != ErrorTypes.OK)
+            {
+                throw new BadInputException(errorInfo);
+            }
 
-            if (theDateTime.Value.AddYears(age) > DateTime.Today)
+            int age = DateTime.Today.Year - validDate.Value.Year;
+
+            if (validDate.Value.AddYears(age) > DateTime.Today)
                 age--;
 
             return age;

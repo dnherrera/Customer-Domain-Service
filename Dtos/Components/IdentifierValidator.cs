@@ -8,8 +8,7 @@
         /// <summary>
         /// Validates journal object.
         /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="userIdentifier">The user identifier.</param>
+        /// <param name="identifier"></param>
         /// <returns>The error info object.</returns>
         public static ErrorInfo Validate(object identifier)
         {

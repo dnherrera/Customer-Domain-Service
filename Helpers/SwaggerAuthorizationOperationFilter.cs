@@ -4,8 +4,16 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace CustomerAPI.Helpers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SwaggerAuthorizationOperationFilter : IOperationFilter
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="operation"></param>
+        /// <param name="context"></param>
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             if (operation.Security == null)

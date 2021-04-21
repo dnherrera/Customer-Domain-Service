@@ -2,6 +2,7 @@
 using CustomerAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +12,6 @@ namespace CustomerAPI.Services
     /// <summary>
     /// Customer Repository
     /// </summary>
-    /// <seealso cref="CustomerAPI.Data.BaseRepository{CustomerModel}"/>
     /// <seealso cref="CustomerAPI.Services.ICustomerRepository"/>
     public class CustomerRepository : BaseRepository<CustomerModel>, ICustomerRepository
     {
@@ -19,6 +19,7 @@ namespace CustomerAPI.Services
         /// Initializes a new instance of the <see cref="CustomerRepository"/> class.
         /// </summary>
         /// <param name="repositoryDbContext"></param>
+        /// <param name="logger"></param>
         public CustomerRepository(RepositoryDbContext repositoryDbContext, ILogger<ICustomerRepository> logger) : base(logger, repositoryDbContext)
         {
         }
@@ -46,6 +47,17 @@ namespace CustomerAPI.Services
             DbContext.Customers.Remove(customer);
             await DbContext.SaveChangesAsync();
             return customerId;
+        }
+
+        /// <summary>
+        /// Get Customer by FullName
+        /// </summary>
+        /// <param name="fullName"></param>
+        /// <param name="dateOfBirth"></param>
+        /// <returns></returns>
+        public async Task<CustomerModel> GetCustomerByFullNameAsync(string fullName, DateTime? dateOfBirth)
+        {
+            return await DbContext.Customers.Where(c => c.FullName == fullName && c.DateOfBirth == dateOfBirth).FirstOrDefaultAsync();
         }
 
         /// <summary>

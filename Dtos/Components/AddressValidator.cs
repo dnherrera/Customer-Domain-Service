@@ -10,8 +10,7 @@ namespace CustomerAPI.Dtos
         /// <summary>
         /// The Validate.
         /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="validValue">The valid value.</param>
+        /// <param name="addressRequest"></param>
         /// <returns>The <see cref="ErrorInfo"/>.</returns>
         public static ErrorInfo Validate(AddressRequest addressRequest)
         {

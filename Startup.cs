@@ -49,6 +49,8 @@ namespace CustomerAPI
             services.AddBasicAuthentication();
 
             services.AddOptions();
+
+            services.AddControllersWithView();
         }
 
         /// <summary>
