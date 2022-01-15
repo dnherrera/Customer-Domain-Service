@@ -44,6 +44,8 @@ namespace CustomerAPI
 
             services.AddAutoMapperProfiles();
 
+            services.AddMediaRHandlers();
+
             services.AddCustomSwagger();
 
             services.AddBasicAuthentication();

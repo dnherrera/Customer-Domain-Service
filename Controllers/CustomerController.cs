@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using CustomerAPI.Dtos;
+using CustomerAPI.Dtos.Responses;
 using CustomerAPI.Helpers;
 using CustomerAPI.Models;
 using CustomerAPI.Requests;
 using CustomerAPI.Services;
 using CustomerAPI.Settings;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,29 +26,22 @@ namespace CustomerAPI.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : BaseLogger
+    public class CustomerController : ControllerBase
     {
-        private readonly ICustomerRepository _customerRepository;
+        private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        private readonly AppSetting _appSetting;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomerController"/> class.
         /// </summary>
-        /// <param name="customerRepository"></param>
-        /// <param name="mapper"></param>
-        /// <param name="logger"></param>
-        /// <param name="appSetting"></param>
-        public CustomerController(
-            ICustomerRepository customerRepository,
-            IMapper mapper,
-            ILogger<CustomerController> logger,
-            IOptions<AppSetting> appSetting) : base(logger)
+        /// <param name="mediator">The mediator.</param>
+        /// <param name="mapper">The mapper.</param>
+        public CustomerController(IMediator mediator, IMapper mapper)
         {
-            _customerRepository = customerRepository;
+            _mediator = mediator;
             _mapper = mapper;
-            _appSetting = appSetting.Value;
         }
+       
 
         /// <summary>
         /// Gets Customer Collection.
@@ -61,57 +56,57 @@ namespace CustomerAPI.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetailsDto))]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetailsDto))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetailsDto))]
-        public async Task<ActionResult> GetCustomerCollection([FromQuery] GetCustomerRequest request)
+        public async Task<ActionResult> GetCustomerCollection([FromQuery] GetCustomerRequest getCustomerDto)
         {
-            LogStart();
-            try
-            {
-                var errorInfo = new ErrorInfo();
+            var request = _mapper.Map<GetCustomerRequest>(getCustomerDto);
 
-                // Paging
-                errorInfo = PagingValidator.Validate(request.PageIndex, request.PageSize, _appSetting.MaximumPageSize, out int pageIndex, out int pageSize);
-                if (errorInfo.ErrorCode != ErrorTypes.OK)
-                {
-                    throw new BadInputException(errorInfo);
-                }
+            var result = await _mediator.Send(request);
 
-                // Sort Field
-                errorInfo = SortFieldValidator.Validate<CustomerModel>(request.SortField, out string sortField);
-                if (errorInfo.ErrorCode != ErrorTypes.OK)
-                {
-                    throw new BadInputException(errorInfo);
-                }
+            return Ok(result);
 
-                var result = await _customerRepository.GetCustomersListAsync();
-                var count = result.Count();
+            /* LogStart();
+             try
+             {
+                 var errorInfo = new ErrorInfo();
 
-                var resultDto = new PagingDto<CustomerDto>
-                {
-                    Collection = _mapper.Map<List<CustomerDto>>(result),
-                    PageIndex = pageIndex,
-                    PageSize = pageSize,
-                    TotalRecords = count,
-                    TotalPages = (int)((count - 1) / pageSize + 1)
-                };
+                 // Paging
+                 errorInfo = PagingValidator.Validate(request.PageIndex, request.PageSize, _appSetting.MaximumPageSize, out int pageIndex, out int pageSize);
+                 if (errorInfo.ErrorCode != ErrorTypes.OK)
+                 {
+                     throw new BadInputException(errorInfo);
+                 }
 
-                LogEnd();
-                return Ok(resultDto);
-            }
-            catch (Exception ex)
-            {
-                LogError(ex);
-                throw ex;
-            }
+                 // Sort Field
+                 errorInfo = SortFieldValidator.Validate<CustomerModel>(request.SortField, out string sortField);
+                 if (errorInfo.ErrorCode != ErrorTypes.OK)
+                 {
+                     throw new BadInputException(errorInfo);
+                 }
+
+                 var result = await _customerRepository.GetCustomersListAsync();
+                 var count = result.Count();
+
+                 var resultDto = new PagingDto<CustomerDto>
+                 {
+                     Collection = _mapper.Map<List<CustomerDto>>(result),
+                     PageIndex = pageIndex,
+                     PageSize = pageSize,
+                     TotalRecords = count,
+                     TotalPages = (int)((count - 1) / pageSize + 1)
+                 };
+
+                 LogEnd();
+                 return Ok(resultDto);
+             }
+             catch (Exception ex)
+             {
+                 LogError(ex);
+                 throw ex;
+             }*/
         }
 
-        /// <summary>
-        /// Gets the customer by identifier.
-        /// </summary>
-        /// <param name="customerId"></param>
-        /// <returns>
-        /// Customer detail by Identifier
-        /// </returns>
-        [HttpGet("{customerId}")]
+
+/*        [HttpGet("{customerId}")]
         [Consumes("application/json")]
         [Produces("application/json", Type = typeof(CustomerDto))]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
@@ -153,13 +148,7 @@ namespace CustomerAPI.Controllers
             }
         }
 
-        /// <summary>
-        /// Add Customer Details.
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns>
-        /// New Customer DTO
-        /// </returns>
+      
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json", Type = typeof(CustomerDto))]
@@ -214,14 +203,7 @@ namespace CustomerAPI.Controllers
             return Ok(customerModel);
         }
 
-        /// <summary>
-        /// Update the Customer Details.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="request"></param>
-        /// <returns>
-        /// Updated Customer DTO
-        /// </returns>
+       
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [Produces("application/json", Type = typeof(CustomerDto))]
@@ -338,6 +320,6 @@ namespace CustomerAPI.Controllers
             var deletedId = await _customerRepository.DeleteCustomerByIdentifierAsync(id);
             
             return Ok(new { customerId = deletedId });
-        }
+        }*/
     }
 }
