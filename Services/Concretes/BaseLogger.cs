@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace CustomerAPI.Services
+namespace CustomerAPI.Services.Concretes
 {
     /// <summary>
     /// Base logger

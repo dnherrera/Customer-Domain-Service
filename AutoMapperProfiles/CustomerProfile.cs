@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using AutoMapper.EquivalencyExpression;
-using CustomerAPI.Dtos;
-using CustomerAPI.Dtos.Requests;
-using CustomerAPI.Dtos.Responses;
+using Customer.Components.Dtos.Requests;
+using Customer.Components.Dtos.Responses;
+using Customer.Components.Helpers;
+using Customer.Components.Requests;
 using CustomerAPI.Models;
-using CustomerAPI.Requests;
 
-namespace CustomerAPI.Helpers
+namespace CustomerAPI.AutoMapperProfiles
 {
     /// <summary>
-    /// The Customer Profile
+    /// The Customer Request Profile
     /// </summary>
     /// <seealso cref="AutoMapper.Profile"/>
     public class CustomerProfile : Profile

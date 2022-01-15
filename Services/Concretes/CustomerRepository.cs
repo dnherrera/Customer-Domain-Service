@@ -1,5 +1,6 @@
 ﻿using CustomerAPI.Data;
 using CustomerAPI.Models;
+using CustomerAPI.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,12 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CustomerAPI.Services
+namespace CustomerAPI.Services.Concretes
 {
     /// <summary>
     /// Customer Repository
     /// </summary>
-    /// <seealso cref="CustomerAPI.Services.ICustomerRepository"/>
     public class CustomerRepository : BaseRepository<CustomerModel>, ICustomerRepository
     {
         /// <summary>

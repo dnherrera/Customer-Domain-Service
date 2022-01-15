@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using CustomerAPI.Settings;
 
-namespace CustomerAPI.Services
+namespace CustomerAPI.Services.Contracts
 {
     /// <summary>
     /// Authentication Key Service Interface

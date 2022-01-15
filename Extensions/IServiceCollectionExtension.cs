@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using CustomerAPI.AutoMapperProfiles;
 using CustomerAPI.Data;
+using CustomerAPI.Filters;
 using CustomerAPI.Handlers;
-using CustomerAPI.Helpers;
-using CustomerAPI.Services;
+using CustomerAPI.Services.Concretes;
+using CustomerAPI.Services.Contracts;
 using CustomerAPI.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;

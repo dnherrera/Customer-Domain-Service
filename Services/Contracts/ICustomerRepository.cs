@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CustomerAPI.Services
+namespace CustomerAPI.Services.Contracts
 {
     /// <summary>
     /// Customer Repo Interface

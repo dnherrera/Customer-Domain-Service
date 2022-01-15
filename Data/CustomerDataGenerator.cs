@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CustomerAPI.Data;
 using CustomerAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CustomerAPI.Helpers
+namespace CustomerAPI.Data
 {
     /// <summary>
     /// 
