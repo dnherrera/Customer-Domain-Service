@@ -1,28 +1,15 @@
-﻿namespace CustomerAPI.Requests
+﻿using CustomerAPI.Dtos;
+using CustomerAPI.Dtos.Requests;
+using CustomerAPI.Dtos.Responses;
+using MediatR;
+
+namespace CustomerAPI.Requests
 {
     /// <summary>
     /// Get Customer Request
     /// </summary>
-    public class GetCustomerRequest
+    /// <seealso cref="CustomerAPI.Dtos.Requests.GetCustomerDto" />
+    public class GetCustomerRequest : GetCustomerDto, IRequest<PagingDto<CustomerDto>>
     {
-        /// <summary>
-        /// Gets or sets the sort field.
-        /// </summary>
-        public string SortField { get; set; }
-
-        /// <summary>
-        /// Gets or sets the is asc sorting.
-        /// </summary>
-        public bool IsAscSorting { get; set; }
-
-        /// <summary>
-        /// Gets or sets the page index
-        /// </summary>
-        public int? PageIndex { get; set; }
-
-        /// <summary>
-        /// Gets or sets the page size
-        /// </summary>
-        public int? PageSize { get; set; }
     }
 }
