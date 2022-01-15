@@ -1,11 +1,11 @@
 ﻿using System;
+using CustomerAPI.Services.Contracts;
 
-namespace CustomerAPI.Services
+namespace CustomerAPI.Services.Concretes
 {
     /// <summary>
     /// Time Service
     /// </summary>
-    /// <see cref="CustomerAPI.Services.ITimeService"/>
     public class TimeService : ITimeService
     {
         private DateTime LastDateTime;

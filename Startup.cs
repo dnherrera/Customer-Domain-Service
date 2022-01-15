@@ -1,6 +1,6 @@
+using Customer.Components.Middlewares;
+using CustomerAPI.Data;
 using CustomerAPI.Extensions;
-using CustomerAPI.Helpers;
-using CustomerAPI.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

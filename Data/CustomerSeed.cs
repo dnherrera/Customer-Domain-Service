@@ -3,7 +3,7 @@ using CustomerAPI.Data;
 using CustomerAPI.Models;
 using Newtonsoft.Json;
 
-namespace CustomerAPI.Helpers
+namespace CustomerAPI.Data
 {
     /// <summary>
     /// 

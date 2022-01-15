@@ -2,12 +2,12 @@
 using System.Net.Http.Headers;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using CustomerAPI.Services;
+using CustomerAPI.Services.Contracts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace CustomerAPI.Helpers
+namespace CustomerAPI.Filters
 {
     /// <summary>
     /// Authentication Handler

@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
-using CustomerAPI.Dtos;
-using CustomerAPI.Dtos.Responses;
-using CustomerAPI.Helpers;
-using CustomerAPI.Models;
-using CustomerAPI.Requests;
-using CustomerAPI.Services;
-using CustomerAPI.Settings;
+using Customer.Components.Dtos.Responses;
+using Customer.Components.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace CustomerAPI.Controllers

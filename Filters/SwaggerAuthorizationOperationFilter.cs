@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace CustomerAPI.Helpers
+namespace CustomerAPI.Filters
 {
     /// <summary>
     /// 

@@ -3,11 +3,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using CustomerAPI.Dtos;
-using CustomerAPI.Dtos.Responses;
+using Customer.Components.Dtos.Responses;
+using Customer.Components.Enums;
+using Customer.Components.Exceptions;
+using Customer.Components.Requests;
+using Customer.Components.Validators;
 using CustomerAPI.Models;
-using CustomerAPI.Requests;
-using CustomerAPI.Services;
+using CustomerAPI.Services.Contracts;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 

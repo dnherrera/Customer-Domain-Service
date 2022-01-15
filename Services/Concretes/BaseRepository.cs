@@ -2,17 +2,16 @@
 using System.Linq;
 using System.Linq.Expressions;
 using CustomerAPI.Data;
+using CustomerAPI.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace CustomerAPI.Services
+namespace CustomerAPI.Services.Concretes
 {
     /// <summary>
     /// Base repository
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    /// <seealso cref="CustomerAPI.Services.BaseLogger" />
-    /// <seealso cref="CustomerAPI.Services.IRepository{TEntity}" />
     public abstract class BaseRepository<TEntity> : BaseLogger, IRepository<TEntity> where TEntity : class
     {
         /// <summary>

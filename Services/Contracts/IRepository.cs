@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace CustomerAPI.Services
+namespace CustomerAPI.Services.Contracts
 {
     /// <summary>
     /// Interface of repository

@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
+using CustomerAPI.Services.Contracts;
 using CustomerAPI.Settings;
 using Microsoft.Extensions.Options;
 
-namespace CustomerAPI.Services
+namespace CustomerAPI.Services.Concretes
 {
     /// <summary>
     /// Authentication Key Service

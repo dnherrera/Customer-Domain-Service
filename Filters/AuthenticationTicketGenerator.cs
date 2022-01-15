@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 
-namespace CustomerAPI.Helpers
+namespace CustomerAPI.Filters
 {
     /// <summary>
     /// Authentication Ticket Generator

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CustomerAPI.Services
+namespace CustomerAPI.Services.Contracts
 {
     /// <summary>
     /// Time Service Interface
