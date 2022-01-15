@@ -2,9 +2,11 @@
 using System.IO;
 using System.Reflection;
 using CustomerAPI.Data;
+using CustomerAPI.Handlers;
 using CustomerAPI.Helpers;
 using CustomerAPI.Services;
 using CustomerAPI.Settings;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,9 +16,9 @@ using Microsoft.OpenApi.Models;
 namespace CustomerAPI.Extensions
 {
     /// <summary>
-    /// The service collection extension.
+    /// The IService collection extension.
     /// </summary>
-    public static class ServiceCollectionExtension
+    public static class IServiceCollectionExtension
     {
         /// <summary>
         /// Adds the settings.
@@ -59,6 +61,15 @@ namespace CustomerAPI.Extensions
         }
 
         /// <summary>
+        /// Adds media r handlers.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        public static void AddMediaRHandlers(this IServiceCollection services)
+        {
+            services.AddMediatR(typeof(GetCustomerCollectionHandler));
+        }
+
+        /// <summary>
         /// Adds the services.
         /// </summary>
         /// <param name="services">The services.</param>
@@ -72,7 +83,7 @@ namespace CustomerAPI.Extensions
         /// <param name="services">The services.</param>
         public static void AddAutoMapperProfiles(this IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(CustomersProfile).Assembly);
+            services.AddAutoMapper(typeof(CustomerProfile).Assembly);
         }
 
         /// <summary>

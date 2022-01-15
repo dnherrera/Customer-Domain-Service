@@ -1,22 +1,27 @@
 ﻿using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using CustomerAPI.Dtos;
+using CustomerAPI.Dtos.Requests;
+using CustomerAPI.Dtos.Responses;
 using CustomerAPI.Models;
 using CustomerAPI.Requests;
 
 namespace CustomerAPI.Helpers
 {
     /// <summary>
-    /// The Customers Profile
+    /// The Customer Profile
     /// </summary>
     /// <seealso cref="AutoMapper.Profile"/>
-    public class CustomersProfile : Profile
+    public class CustomerProfile : Profile
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CustomersProfile" /> class.
+        /// Initializes a new instance of the <see cref="CustomerProfile"/> class.
         /// </summary>
-        public CustomersProfile()
+        public CustomerProfile()
         {
+            //Mapping from GetCustomerDto to Get Customer Requests
+            CreateMap<GetCustomerDto, GetCustomerRequest>();
+
             // Mapping Customer Model to Customer DTO 
             CreateMap<CustomerModel, CustomerDto>()
                 .ReverseMap()

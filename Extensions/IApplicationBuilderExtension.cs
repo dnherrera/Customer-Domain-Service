@@ -3,9 +3,9 @@
 namespace CustomerAPI.Extensions
 {
     /// <summary>
-    /// The application builder extension.
+    /// The IApplication builder extension.
     /// </summary>
-    public static class ApplicationBuilderExtension
+    public static class IApplicationBuilderExtension
     {
         /// <summary>
         /// Uses custom swagger.
