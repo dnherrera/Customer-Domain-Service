@@ -69,6 +69,7 @@ namespace CustomerAPI.Extensions
         public static void AddMediaRHandlers(this IServiceCollection services)
         {
             services.AddMediatR(typeof(GetCustomerCollectionHandler));
+            services.AddMediatR(typeof(GetCustomerByIdHandler));
         }
 
         /// <summary>
