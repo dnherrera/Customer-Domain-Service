@@ -25,8 +25,8 @@ namespace CustomerAPI.AutoMapperProfiles
             // Mapping Customer Model to Customer DTO 
             CreateMap<CustomerModel, CustomerDto>()
                 .ReverseMap()
-                .ForMember(m => m.Id, opt => opt.Ignore())
-                .ForMember(cm => cm.Age, ccr => ccr.MapFrom(d => CalculateAge.Calculate(d.DateOfBirth)));
+                .ForMember(cm => cm.Id, opt => opt.Ignore())
+                .ForMember(cm => cm.Age, cd => cd.MapFrom(d => CalculateAge.Calculate(d.DateOfBirth)));
 
             // Mapping Address Model to Address DTO 
             CreateMap<AddressModel, AddressDto>()
