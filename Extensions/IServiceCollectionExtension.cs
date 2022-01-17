@@ -70,6 +70,7 @@ namespace CustomerAPI.Extensions
         {
             services.AddMediatR(typeof(GetCustomerCollectionHandler));
             services.AddMediatR(typeof(GetCustomerByIdHandler));
+            services.AddMediatR(typeof(CreateCustomerHandler));
         }
 
         /// <summary>

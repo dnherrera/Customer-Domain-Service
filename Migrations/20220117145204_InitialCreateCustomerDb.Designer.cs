@@ -9,23 +9,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CustomerAPI.Migrations
 {
     [DbContext(typeof(RepositoryDbContext))]
-    [Migration("20200316150242_Initial Create Customer DB")]
-    partial class InitialCreateCustomerDB
+    [Migration("20220117145204_InitialCreateCustomerDb")]
+    partial class InitialCreateCustomerDb
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="modelBuilder"></param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.1");
 
-            modelBuilder.Entity("CustomerAPI.Models.Address", b =>
+            modelBuilder.Entity("CustomerAPI.Models.AddressModel", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("CustomerId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("AddressLine1")
@@ -37,20 +32,15 @@ namespace CustomerAPI.Migrations
                     b.Property<string>("City")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("State")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("CustomerId");
 
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("CustomerAPI.Models.Customer", b =>
+            modelBuilder.Entity("CustomerAPI.Models.CustomerModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,7 +52,7 @@ namespace CustomerAPI.Migrations
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -70,10 +60,10 @@ namespace CustomerAPI.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("CustomerAPI.Models.Address", b =>
+            modelBuilder.Entity("CustomerAPI.Models.AddressModel", b =>
                 {
-                    b.HasOne("CustomerAPI.Models.Customer", "Customer")
-                        .WithMany("Address")
+                    b.HasOne("CustomerAPI.Models.CustomerModel", "Customer")
+                        .WithMany("Addresses")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace CustomerAPI.Models
 {
@@ -13,14 +11,12 @@ namespace CustomerAPI.Models
         /// <summary>
         /// Gets or sets the Customer Identifier
         /// </summary>
-        [Key]
         public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the Customer Fullname
         /// </summary>
-        [Required]
-        public string FullName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets Date of Birth
@@ -35,14 +31,6 @@ namespace CustomerAPI.Models
         /// <summary>
         /// Gets or sets Address
         /// </summary>
-        public ICollection<AddressModel> Address { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomerModel" /> class.
-        /// </summary>
-        public CustomerModel()
-        {
-            Address = new Collection<AddressModel>();
-        }
+        public virtual ICollection<AddressModel> Addresses { get; set; }
     }
 }
