@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using CustomerAPI.Data;
 using CustomerAPI.Models;
 using Newtonsoft.Json;
 

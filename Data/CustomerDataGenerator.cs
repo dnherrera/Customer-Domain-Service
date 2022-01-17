@@ -42,11 +42,11 @@ namespace CustomerAPI.Data
 
                 context.Customers.AddRange
                 (
-                    new CustomerModel() { Id = 1, FullName = "Juan Dela Cruz", Age = 25, DateOfBirth = DateTime.Parse("10/02/1995"), Address = addressColletion },
-                    new CustomerModel() { Id = 2, FullName = "Jane Doe", Age = 24, DateOfBirth = DateTime.Parse("04/02/1996"), Address = addressColletion },
-                    new CustomerModel() { Id = 3, FullName = "Marco Fuentes", Age = 23, DateOfBirth = DateTime.Parse("08/02/1997"), Address = addressColletion },
-                    new CustomerModel() { Id = 4, FullName = "Mary Jane Herrera", Age = 23, DateOfBirth = DateTime.Parse("05/02/1997"), Address = addressColletion },
-                    new CustomerModel() { Id = 5, FullName = "Catriona Grey", Age = 23, DateOfBirth = DateTime.Parse("09/02/1997"), Address = addressColletion }
+                    new CustomerModel() { Id = 1, Name = "Juan Dela Cruz", Age = 25, DateOfBirth = DateTime.Parse("10/02/1995"), Addresses = addressColletion },
+                    new CustomerModel() { Id = 2, Name = "Jane Doe", Age = 24, DateOfBirth = DateTime.Parse("04/02/1996"), Addresses = addressColletion },
+                    new CustomerModel() { Id = 3, Name = "Marco Fuentes", Age = 23, DateOfBirth = DateTime.Parse("08/02/1997"), Addresses = addressColletion },
+                    new CustomerModel() { Id = 4, Name = "Mary Jane Herrera", Age = 23, DateOfBirth = DateTime.Parse("05/02/1997"), Addresses = addressColletion },
+                    new CustomerModel() { Id = 5, Name = "Catriona Grey", Age = 23, DateOfBirth = DateTime.Parse("09/02/1997"), Addresses = addressColletion }
                 );
 
                 context.SaveChanges();

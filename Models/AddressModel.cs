@@ -6,9 +6,14 @@
     public class AddressModel
     {
         /// <summary>
-        /// Gets or sets Address Identifier
+        /// Gets or sets the Customer Id
         /// </summary>
-        public int Id { get; set; }
+        public int CustomerId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Customer
+        /// </summary>
+        public virtual CustomerModel Customer { get; set; }
 
         /// <summary>
         /// Gets or sets the Address Line 1
@@ -29,15 +34,5 @@
         /// Gets or sets the State
         /// </summary>
         public string State { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Customer
-        /// </summary>
-        public CustomerModel Customer { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Customer Id
-        /// </summary>
-        public int CustomerId { get; set; }
     }
 }
