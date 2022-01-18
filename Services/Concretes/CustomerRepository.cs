@@ -50,14 +50,14 @@ namespace CustomerAPI.Services.Concretes
         }
 
         /// <summary>
-        /// Get Customer by FullName
+        /// Get Customer by name
         /// </summary>
-        /// <param name="fullName"></param>
+        /// <param name="name"></param>
         /// <param name="dateOfBirth"></param>
         /// <returns></returns>
-        public async Task<CustomerModel> GetCustomerByFullNameAsync(string fullName, DateTime? dateOfBirth)
+        public async Task<CustomerModel> GetCustomerByName(string name, DateTime? dateOfBirth)
         {
-            return await DbContext.Customers.Where(c => c.Name == fullName && c.DateOfBirth == dateOfBirth).FirstOrDefaultAsync();
+            return await DbContext.Customers.Where(c => c.Name == name && c.DateOfBirth == dateOfBirth).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace CustomerAPI.Services.Concretes
         /// Get Customer List Collection
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<CustomerModel>> GetCustomersListAsync()
+        public async Task<List<CustomerModel>> GetCustomersListAsync()
         {
             return await DbContext.Customers.Include(a => a.Addresses).ToListAsync();
         }

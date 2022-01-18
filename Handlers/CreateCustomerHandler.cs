@@ -59,7 +59,7 @@ namespace CustomerAPI.Handlers
             }
 
             // Check if user already exists
-            var user = await _customerRepository.GetCustomerByFullNameAsync(validName, validDateOfBirth);
+            var user = await _customerRepository.GetCustomerByName(validName, validDateOfBirth);
             if (user?.Id != null)
             {
                 errorInfo.ErrorCode = ErrorTypes.InvalidName;
