@@ -14,7 +14,7 @@ namespace CustomerAPI.Services.Contracts
         /// Get Customer List Async
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<CustomerModel>> GetCustomersListAsync();
+        Task<List<CustomerModel>> GetCustomersListAsync();
 
         /// <summary>
         /// Get Customer by Id Async
@@ -24,12 +24,12 @@ namespace CustomerAPI.Services.Contracts
         Task<CustomerModel> GetCustomerByIdentifierAsync(int id);
 
         /// <summary>
-        /// Get Customer by Username Async
+        /// Get Customer by name Async
         /// </summary>
-        /// <param name="fullName"></param>
+        /// <param name="name"></param>
         /// <param name="dateOfBirth"></param>
         /// <returns></returns>
-        Task<CustomerModel> GetCustomerByFullNameAsync(string fullName, DateTime? dateOfBirth);
+        Task<CustomerModel> GetCustomerByName(string name, DateTime? dateOfBirth);
 
         /// <summary>
         /// Create Customer Async
