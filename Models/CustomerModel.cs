@@ -9,28 +9,52 @@ namespace CustomerAPI.Models
     public class CustomerModel
     {
         /// <summary>
-        /// Gets or sets the Customer Identifier
+        /// Gets or sets the identifier.
         /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the Customer Fullname
+        /// Gets or sets the name.
         /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets Date of Birth
+        /// Gets or sets the date of birth.
         /// </summary>
+        /// <value>
+        /// The date of birth.
+        /// </value>
         public DateTime? DateOfBirth { get; set; }
 
         /// <summary>
-        /// Gets or sets Age
+        /// Gets or sets the age.
         /// </summary>
+        /// <value>
+        /// The age.
+        /// </value>
         public int Age { get; set; }
 
         /// <summary>
-        /// Gets or sets Address
+        /// Gets or sets the addresses.
         /// </summary>
-        public virtual ICollection<AddressModel> Addresses { get; set; }
+        /// <value>
+        /// The addresses.
+        /// </value>
+        public virtual List<AddressModel> Addresses { get; set; }
+
+        /// <summary>
+        /// Copies this instance.
+        /// </summary>
+        /// <returns></returns>
+        public CustomerModel Copy()
+        {
+           return (CustomerModel)MemberwiseClone();
+        }
     }
 }

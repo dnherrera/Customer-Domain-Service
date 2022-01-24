@@ -24,6 +24,12 @@ namespace CustomerAPI.AutoMapperProfiles
             // Mapping CreateCustomerDto to CreateCustomerRequest
             CreateMap<CreateCustomerDto, CreateCustomerRequest>();
 
+            // Mapping UpdateCustomerDto to UpdateCustomerRequest
+            CreateMap<UpdateCustomerDto, UpdateCustomerRequest>();
+
+            // Mapping Customer Model to Customer DTO 
+            CreateMap<CustomerModel, CustomerDto>();
+
             // Mapping Create Customer Request to Customer Model 
             CreateMap<CreateCustomerRequest, CustomerModel>()
                 .ForMember(cm => cm.Addresses, ccr => ccr.Ignore())
@@ -32,12 +38,7 @@ namespace CustomerAPI.AutoMapperProfiles
             // Mapping Address Model to Address DTO
             CreateMap<AddressModel, AddressDto>();
 
-            // Mapping Customer Model to Customer DTO 
-            CreateMap<CustomerModel, CustomerDto>();
-
-
-          
-           
+            
         }
     }
 }
