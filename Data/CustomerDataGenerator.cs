@@ -38,7 +38,7 @@ namespace CustomerAPI.Data
                     new AddressModel() { AddressLine1 = "8323 Perea", AddressLine2 = "Subah", City = "Cubao City", State = "Metro Manila", CustomerId = 5}
                 };
 
-                ICollection<AddressModel> addressColletion = addressList;
+                List<AddressModel> addressColletion = addressList;
 
                 context.Customers.AddRange
                 (
