@@ -17,7 +17,7 @@ namespace CustomerAPI
         /// <summary>
         /// Gets the configuration.
         /// </summary>
-        public IConfiguration Configuration { get; }
+        public IConfiguration _configuration { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup" /> class.
@@ -25,7 +25,7 @@ namespace CustomerAPI
         /// <param name="configuration">The configuration.</param>
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace CustomerAPI
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSettings(Configuration);
+            services.AddSettings(_configuration);
 
             services.AddControllers();
 
@@ -46,13 +46,9 @@ namespace CustomerAPI
 
             services.AddMediaRHandlers();
 
-            services.AddCustomSwagger();
+            services.AddCustomSwagger(_configuration);
 
             services.AddBasicAuthentication();
-
-            services.AddOptions();
-
-            services.AddControllersWithView();
         }
 
         /// <summary>
@@ -85,7 +81,7 @@ namespace CustomerAPI
                 endpoints.MapControllers();
             });
 
-            app.UseCustomSwagger();
+            app.UseCustomSwagger(_configuration);
         }
     }
 }

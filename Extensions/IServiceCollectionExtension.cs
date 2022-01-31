@@ -29,25 +29,14 @@ namespace CustomerAPI.Extensions
         /// <param name="configuration">The configuration.</param>
         public static void AddSettings(this IServiceCollection services, IConfiguration configuration)
         {
-            // connect to Customer API Connection
-            services.AddDbContext<RepositoryDbContext>(opt => opt.UseSqlite(configuration.GetConnectionString("CustomerAPIConnection")));
+            // Read Customer DB Connection
+            services.AddDbContext<RepositoryDbContext>(opt => opt.UseSqlite(configuration.GetConnectionString("CustomerApiDbConnection")));
 
-            // read Auth Key Setting
+            // Read Auth Key Setting
             services.Configure<AuthKeySetting>(configuration.GetSection(AuthKeySetting.SectionName));
 
-            // read App Setting
+            // Read App Setting
             services.Configure<AppSetting>(configuration.GetSection(AppSetting.SectionName));
-        }
-
-        /// <summary>
-        /// Add Controller with Views to support Auto Profile while Displaying after Creating User.
-        /// </summary>
-        /// <param name="services"></param>
-        public static void AddControllersWithView(this IServiceCollection services)
-        {
-            services.AddControllersWithViews()
-                .AddNewtonsoftJson(options =>
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
 
         /// <summary>
@@ -99,26 +88,21 @@ namespace CustomerAPI.Extensions
         {
             // configure basic authentication 
             services.AddAuthentication("BasicAuthentication")
-                .AddScheme<AuthenticationSchemeOptions, AuthenticationHandler>("BasicAuthentication", null);
+                    .AddScheme<AuthenticationSchemeOptions, AuthenticationHandler>("BasicAuthentication", null);
         }
 
         /// <summary>
         /// Adds custom swagger.
         /// </summary>
         /// <param name="services"></param>
-        public static void AddCustomSwagger(this IServiceCollection services)
+        /// <param name="configuration"></param>
+        public static void AddCustomSwagger(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(config =>
             {
-                c.SwaggerDoc("v1.0", new OpenApiInfo 
-                { 
-                    Title = "Customer API", 
-                    Version = "v1.0" 
-                
-                });
+                config.SwaggerDoc("v1.0", new OpenApiInfo { Title = configuration.GetValue<string>("SwaggerSettings:AppName"), Version = "v1" });
 
-                c.EnableAnnotations();
-                c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+                config.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.Http,
                     BearerFormat = "JWT",
@@ -126,15 +110,15 @@ namespace CustomerAPI.Extensions
                     Scheme = "bearer"
                 });
 
-                c.OperationFilter<SwaggerAuthorizationOperationFilter>();
+                config.OperationFilter<SwaggerAuthorizationOperationFilter>();
 
                 // make sure generate swagger with operation id
-                c.CustomOperationIds(e => $"{e.ActionDescriptor.RouteValues["action"]}");
+                config.CustomOperationIds(e => $"{e.ActionDescriptor.RouteValues["action"]}");
 
                 // xml document for decorate the swagger
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
+                config.IncludeXmlComments(xmlPath);
             });
         }
     }

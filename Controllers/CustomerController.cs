@@ -14,7 +14,7 @@ namespace CustomerAPI.Controllers
     /// <summary>
     /// Customer Controller
     /// </summary>
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
@@ -45,7 +45,6 @@ namespace CustomerAPI.Controllers
         [Produces("application/json", Type = typeof(PagingDto<CustomerDto>))]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(PagingDto<CustomerDto>))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetailsDto))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetailsDto))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetailsDto))]
         public async Task<ActionResult> GetCustomerCollection([FromQuery] GetCustomerRequest getCustomerDto)
         {
@@ -88,7 +87,6 @@ namespace CustomerAPI.Controllers
         [Produces("application/json", Type = typeof(CustomerDto))]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetailsDto))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetailsDto))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetailsDto))]
         public async Task<IActionResult> CreateCustomerInfo([FromBody] CreateCustomerDto requestDto)
         {
@@ -109,7 +107,6 @@ namespace CustomerAPI.Controllers
         [Produces("application/json", Type = typeof(CustomerDto))]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetailsDto))]
-        [SwaggerResponse(StatusCodes.Status401Unauthorized, Type = typeof(ProblemDetailsDto))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetailsDto))]
         public async Task<IActionResult> UpdateCustomer(int id, UpdateCustomerDto requestDto)
         {
