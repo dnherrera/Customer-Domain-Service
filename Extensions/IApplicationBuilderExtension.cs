@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 
 namespace CustomerAPI.Extensions
 {
@@ -11,18 +12,18 @@ namespace CustomerAPI.Extensions
         /// Uses custom swagger.
         /// </summary>
         /// <param name="app">The application builder.</param>
-        public static void UseCustomSwagger(this IApplicationBuilder app)
+        /// <param name="configuration"></param>
+        public static void UseCustomSwagger(this IApplicationBuilder app, IConfiguration configuration)
         {
             app.UseSwagger(options =>
             {
-                //options.SerializeAsV2 = true;
-                options.RouteTemplate = "swagger/{documentName}/swagger.json";
+                options.RouteTemplate = "api/swagger/{documentName}/swagger.json";
             });
 
             app.UseSwaggerUI(config =>
             {
-                config.SwaggerEndpoint("/swagger/v1.0/swagger.json", "Customer API");
-                //config.RoutePrefix = "/swagger";
+                config.SwaggerEndpoint("/api/swagger/v1.0/swagger.json", configuration.GetValue<string>("SwaggerSettings:AppName"));
+                config.RoutePrefix = "api/swagger";
             });
         }
     }

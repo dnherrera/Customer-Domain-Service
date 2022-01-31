@@ -41,20 +41,22 @@ namespace CustomerAPI.Filters
         /// <returns></returns>
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            string authKey;
-
             if (!Request.Headers.ContainsKey("Authorization"))
-                return AuthenticateResult.Fail("Missing Authorization Header");
-        
+            {
+                return AuthenticateResult.Fail("Missing Authorization Header.");
+            }
+
             try
             {
                 // Get the Auth Header and Validate
                 var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
-                authKey = await _authentication.AuthenticateKeyAsync(authHeader.Parameter);
+                string authKey = await _authentication.AuthenticateKeyAsync(authHeader.Parameter);
 
                 // Validate Auth Key
                 if (authKey is null)
-                    return AuthenticateResult.Fail("Invalid Authentication Key");
+                {
+                    return AuthenticateResult.Fail("Invalid Authentication Key.");
+                }
 
                 // Generate Auth Ticket
                 var authenticationTicket = AuthenticationTicketGenerator.Create(authKey, Scheme.Name);
