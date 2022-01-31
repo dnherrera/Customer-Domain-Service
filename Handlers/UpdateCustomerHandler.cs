@@ -94,62 +94,43 @@ namespace CustomerAPI.Handlers
             // Validates Address
             var listAddress = new List<AddressModel>();
             var result = new AddressModel();
-            if (request?.Address != null || request.Address.Any())
+            if (request.Address != null || request.Address.Any())
             {
-                int i = 0;
                 foreach (var item in request.Address)
                 {
-                    result.AddressLine1 = customerDetails.Addresses[i]?.AddressLine1;
-                    if (!string.IsNullOrWhiteSpace(item.AddressLine1))
+                    errorInfo = AddressLineValidator.Validate(item.AddressLine1, out string validAddressLine1);
+                    if (errorInfo.ErrorCode != ErrorTypes.OK)
                     {
-                        errorInfo = AddressLineValidator.Validate(item.AddressLine1, out string validAddressLine1);
-                        if (errorInfo.ErrorCode != ErrorTypes.OK)
-                        {
-                            throw new BadInputException(errorInfo);
-                        }
-
-                        result.AddressLine1 = validAddressLine1;
+                        throw new BadInputException(errorInfo);
                     }
 
-                    result.AddressLine2 = customerDetails.Addresses[i]?.AddressLine2;
-                    if (!string.IsNullOrWhiteSpace(item.AddressLine2))
+                    errorInfo = AddressLineValidator.Validate(item.AddressLine2, out string validAddressLine2);
+                    if (errorInfo.ErrorCode != ErrorTypes.OK)
                     {
-                        errorInfo = AddressLineValidator.Validate(item.AddressLine2, out string validAddressLine2);
-                        if (errorInfo.ErrorCode != ErrorTypes.OK)
-                        {
-                            throw new BadInputException(errorInfo);
-                        }
-
-                        result.AddressLine2 = validAddressLine2;
+                        throw new BadInputException(errorInfo);
                     }
 
-                    result.City = customerDetails.Addresses[i]?.City;
-                    if (!string.IsNullOrWhiteSpace(item.City))
+                    errorInfo = CityValidator.Validate(item.City, out string validCity);
+                    if (errorInfo.ErrorCode != ErrorTypes.OK)
                     {
-                        errorInfo = CityValidator.Validate(item.City, out string validCity);
-                        if (errorInfo.ErrorCode != ErrorTypes.OK)
-                        {
-                            throw new BadInputException(errorInfo);
-                        }
-
-                        result.City = validCity;
+                        throw new BadInputException(errorInfo);
                     }
 
-                    result.State = customerDetails.Addresses[i]?.State;
-                    if (!string.IsNullOrWhiteSpace(item.State))
+                    errorInfo = StateValidator.Validate(item.State, out string validState);
+                    if (errorInfo.ErrorCode != ErrorTypes.OK)
                     {
-                        errorInfo = StateValidator.Validate(item.State, out string validState);
-                        if (errorInfo.ErrorCode != ErrorTypes.OK)
-                        {
-                            throw new BadInputException(errorInfo);
-                        }
-
-                        result.State = validState;
+                        throw new BadInputException(errorInfo);
                     }
 
-                    i++;
-                    listAddress.Add(result);
+                    listAddress.Add(new AddressModel
+                    { 
+                        AddressLine1 = validAddressLine1,
+                        AddressLine2 = validAddressLine2,
+                        State = validState,
+                        City = validCity
+                    });
                 }
+
                 customerDetails.Addresses = listAddress;
                 isModified = true;
             }
