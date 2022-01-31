@@ -71,6 +71,7 @@ namespace CustomerAPI.Extensions
             services.AddMediatR(typeof(GetCustomerCollectionHandler));
             services.AddMediatR(typeof(GetCustomerByIdHandler));
             services.AddMediatR(typeof(CreateCustomerHandler));
+            services.AddMediatR(typeof(DeleteCustomerHandler));
         }
 
         /// <summary>

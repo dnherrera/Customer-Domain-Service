@@ -128,30 +128,16 @@ namespace CustomerAPI.Controllers
         /// <returns>
         /// Deleted Customer Id
         /// </returns>
-        /*[HttpDelete("{id}")]
+        [HttpDelete("{id}")]
         [Consumes("application/json")]
         [Produces("application/json", Type = typeof(int))]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(int))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetailsDto))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetailsDto))]
-        public async Task<IActionResult> DeleteCustomer([FromRoute] int id)
+        public async Task<IActionResult> DeleteCustomer(int id)
         {
-            var errorInfo = new ErrorInfo();
-
-            // Find customer to delete
-            var customerToDelete = await _customerRepository.GetCustomerByIdentifierAsync(id);
-
-            // Customer
-            errorInfo = CustomerObjectValidator.Validate(customerToDelete, id);
-            if (errorInfo.ErrorCode != ErrorTypes.OK)
-            {
-                throw new BadInputException(errorInfo);
-            }
-
-            // Delete the Customer By Id
-            var deletedId = await _customerRepository.DeleteCustomerByIdentifierAsync(id);
-
-            return Ok(new { customerId = deletedId });
-        }*/
+            var result = await _mediator.Send(new DeleteCustomerRequest { Id = id });
+            return Ok(result);
+        }
     }
 }
